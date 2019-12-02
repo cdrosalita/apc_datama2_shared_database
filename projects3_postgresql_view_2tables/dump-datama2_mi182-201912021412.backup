@@ -1,0 +1,212 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 10.10 (Ubuntu 10.10-0ubuntu0.18.04.1)
+-- Dumped by pg_dump version 12.0
+
+-- Started on 2019-12-02 14:12:06
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'SQL_ASCII';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 19 (class 2615 OID 16738)
+-- Name: cdrosalita; Type: SCHEMA; Schema: -; Owner: datama2mi182
+--
+
+CREATE SCHEMA cdrosalita;
+
+
+ALTER SCHEMA cdrosalita OWNER TO datama2mi182;
+
+SET default_tablespace = '';
+
+--
+-- TOC entry 299 (class 1259 OID 20214)
+-- Name: docu_agree; Type: TABLE; Schema: cdrosalita; Owner: datama2mi182
+--
+
+CREATE TABLE cdrosalita.docu_agree (
+    id integer,
+    da_date date,
+    da_status character varying,
+    da_duration integer,
+    franchi_franchi_id integer,
+    franchi_man_id integer,
+    franchi_doc_agree_id integer,
+    franchi_form_id integer,
+    franchi_loc_id integer,
+    fd_id integer NOT NULL
+);
+
+
+ALTER TABLE cdrosalita.docu_agree OWNER TO datama2mi182;
+
+--
+-- TOC entry 300 (class 1259 OID 20226)
+-- Name: docu_agree_fd_id_seq; Type: SEQUENCE; Schema: cdrosalita; Owner: datama2mi182
+--
+
+CREATE SEQUENCE cdrosalita.docu_agree_fd_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE cdrosalita.docu_agree_fd_id_seq OWNER TO datama2mi182;
+
+--
+-- TOC entry 4045 (class 0 OID 0)
+-- Dependencies: 300
+-- Name: docu_agree_fd_id_seq; Type: SEQUENCE OWNED BY; Schema: cdrosalita; Owner: datama2mi182
+--
+
+ALTER SEQUENCE cdrosalita.docu_agree_fd_id_seq OWNED BY cdrosalita.docu_agree.fd_id;
+
+
+--
+-- TOC entry 302 (class 1259 OID 20238)
+-- Name: franchisee; Type: TABLE; Schema: cdrosalita; Owner: datama2mi182
+--
+
+CREATE TABLE cdrosalita.franchisee (
+    id integer,
+    fran_fname character varying,
+    fran_lname character varying,
+    fran_bday date,
+    fran_addr character varying,
+    fran_sala integer,
+    fran_email character varying,
+    fran_num integer,
+    franchi_id integer,
+    manage_id integer,
+    docargee_id integer,
+    form_id integer,
+    location_id integer,
+    fd_id integer NOT NULL
+);
+
+
+ALTER TABLE cdrosalita.franchisee OWNER TO datama2mi182;
+
+--
+-- TOC entry 304 (class 1259 OID 20250)
+-- Name: fran_agree; Type: VIEW; Schema: cdrosalita; Owner: datama2mi182
+--
+
+CREATE VIEW cdrosalita.fran_agree AS
+ SELECT franchisee.fran_fname,
+    docu_agree.da_status,
+    franchisee.fran_bday,
+    docu_agree.da_duration,
+    franchisee.fran_addr
+   FROM (cdrosalita.franchisee
+     JOIN cdrosalita.docu_agree ON ((franchisee.fd_id = docu_agree.fd_id)))
+  WHERE (docu_agree.da_duration < 32);
+
+
+ALTER TABLE cdrosalita.fran_agree OWNER TO datama2mi182;
+
+--
+-- TOC entry 305 (class 1259 OID 20260)
+-- Name: franchisee_fd_id_seq; Type: SEQUENCE; Schema: cdrosalita; Owner: datama2mi182
+--
+
+CREATE SEQUENCE cdrosalita.franchisee_fd_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE cdrosalita.franchisee_fd_id_seq OWNER TO datama2mi182;
+
+--
+-- TOC entry 4046 (class 0 OID 0)
+-- Dependencies: 305
+-- Name: franchisee_fd_id_seq; Type: SEQUENCE OWNED BY; Schema: cdrosalita; Owner: datama2mi182
+--
+
+ALTER SEQUENCE cdrosalita.franchisee_fd_id_seq OWNED BY cdrosalita.franchisee.fd_id;
+
+
+--
+-- TOC entry 3876 (class 2604 OID 20262)
+-- Name: docu_agree fd_id; Type: DEFAULT; Schema: cdrosalita; Owner: datama2mi182
+--
+
+ALTER TABLE ONLY cdrosalita.docu_agree ALTER COLUMN fd_id SET DEFAULT nextval('cdrosalita.docu_agree_fd_id_seq'::regclass);
+
+
+--
+-- TOC entry 3877 (class 2604 OID 20263)
+-- Name: franchisee fd_id; Type: DEFAULT; Schema: cdrosalita; Owner: datama2mi182
+--
+
+ALTER TABLE ONLY cdrosalita.franchisee ALTER COLUMN fd_id SET DEFAULT nextval('cdrosalita.franchisee_fd_id_seq'::regclass);
+
+
+--
+-- TOC entry 4036 (class 0 OID 20214)
+-- Dependencies: 299
+-- Data for Name: docu_agree; Type: TABLE DATA; Schema: cdrosalita; Owner: datama2mi182
+--
+
+COPY cdrosalita.docu_agree (id, da_date, da_status, da_duration, franchi_franchi_id, franchi_man_id, franchi_doc_agree_id, franchi_form_id, franchi_loc_id, fd_id) FROM stdin;
+12	2019-11-11	active	10	12	12	12	12	12	1
+31	2019-03-03	active	31	31	31	31	31	31	2
+\N	\N	\N	\N	\N	\N	\N	\N	\N	99
+\.
+
+
+--
+-- TOC entry 4038 (class 0 OID 20238)
+-- Dependencies: 302
+-- Data for Name: franchisee; Type: TABLE DATA; Schema: cdrosalita; Owner: datama2mi182
+--
+
+COPY cdrosalita.franchisee (id, fran_fname, fran_lname, fran_bday, fran_addr, fran_sala, fran_email, fran_num, franchi_id, manage_id, docargee_id, form_id, location_id, fd_id) FROM stdin;
+1	aron	realto	2000-11-11	taguig	500	aron@mail	11	11	11	11	11	11	1
+2	jhay	realti	2000-12-12	makati	600	jhay@mail	22	22	22	22	22	22	2
+\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	66
+\.
+
+
+--
+-- TOC entry 4047 (class 0 OID 0)
+-- Dependencies: 300
+-- Name: docu_agree_fd_id_seq; Type: SEQUENCE SET; Schema: cdrosalita; Owner: datama2mi182
+--
+
+SELECT pg_catalog.setval('cdrosalita.docu_agree_fd_id_seq', 2, true);
+
+
+--
+-- TOC entry 4048 (class 0 OID 0)
+-- Dependencies: 305
+-- Name: franchisee_fd_id_seq; Type: SEQUENCE SET; Schema: cdrosalita; Owner: datama2mi182
+--
+
+SELECT pg_catalog.setval('cdrosalita.franchisee_fd_id_seq', 2, true);
+
+
+-- Completed on 2019-12-02 14:12:07
+
+--
+-- PostgreSQL database dump complete
+--
+
